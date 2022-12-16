@@ -1,0 +1,11 @@
+{
+  "watch": [
+    "src"
+  ],
+  "ext": ".ts,.js",
+  "env": {
+    "NODE_ENV": "dev"
+  },
+  "ignore": [],
+  "exec": "node -r ts-node/register ./src/index.ts"
+}
