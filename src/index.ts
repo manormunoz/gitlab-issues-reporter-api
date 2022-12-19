@@ -35,9 +35,11 @@ app.get('/members', async (req, res) => {
 
 app.get('/issues', async (req, res) => {
   try {
+    console.log(req.query);
     const query: any = {
       pagination: 'keyset',
       per_page: req.query.per_page || 20,
+      page: req.query.page || 1,
       order_by: 'created_at',
       sort: 'desc',
     };
