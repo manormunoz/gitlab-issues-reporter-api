@@ -49,6 +49,13 @@ app.get('/issues', async (req, res) => {
     }
     if (req.query.author_id) {
       query.author_id = req.query.author_id;
+    } 
+    if (req.query.not){
+      console.log(req.query);
+      Object.keys(req.query.not).forEach(key => {
+        query[`not[${key}]`] = req.query.not[key];
+      });
+      console.log(query);
     }
     const issues = await gitLab.issues(query, true);
     return res.send(issues);
@@ -69,6 +76,13 @@ app.get('/issues_statistics/:by?', async (req, res) => {
     query.created_before = moment(end || new Date()).endOf('day').toISOString();
     if (req.query.author_id) {
       query.author_id = req.query.author_id;
+    }
+    if (req.query.not) {
+      console.log(req.query);
+      Object.keys(req.query.not).forEach(key => {
+        query[`not[${key}]`] = req.query.not[key];
+      });
+      console.log(query);
     }
     switch (by) {
       case 'members':
