@@ -35,7 +35,6 @@ app.get('/members', async (req, res) => {
 
 app.get('/issues', async (req, res) => {
   try {
-    console.log(req.query);
     const query: any = {
       pagination: 'keyset',
       per_page: req.query.per_page || 20,
@@ -55,8 +54,8 @@ app.get('/issues', async (req, res) => {
       Object.keys(req.query.not).forEach(key => {
         query[`not[${key}]`] = req.query.not[key];
       });
-      console.log(query);
     }
+    console.log(query);
     const issues = await gitLab.issues(query, true);
     return res.send(issues);
   } catch (err) {
@@ -78,11 +77,9 @@ app.get('/issues_statistics/:by?', async (req, res) => {
       query.author_id = req.query.author_id;
     }
     if (req.query.not) {
-      console.log(req.query);
       Object.keys(req.query.not).forEach(key => {
         query[`not[${key}]`] = req.query.not[key];
       });
-      console.log(query);
     }
     switch (by) {
       case 'members':
