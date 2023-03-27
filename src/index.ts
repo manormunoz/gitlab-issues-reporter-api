@@ -43,8 +43,8 @@ app.get('/issues', async (req, res) => {
       sort: 'desc',
     };
     if (req.query.start && req.query.end) {
-      query.created_after = moment(req.query.start.toString()).startOf('day').toISOString();
-      query.created_before = moment(req.query.end.toString()).endOf('day').toISOString();
+      query.updated_after = moment(req.query.start.toString()).startOf('day').toISOString();
+      query.updated_before = moment(req.query.end.toString()).endOf('day').toISOString();
     }
     if (req.query.author_id) {
       query.author_id = req.query.author_id;
@@ -71,8 +71,8 @@ app.get('/issues_statistics/:by?', async (req, res) => {
     const start: string = (req.query.start || '').toString();
     const end: string = (req.query.end || '').toString();
     const query: any = {};
-    query.created_after = moment(start || moment().add(-30, 'day').toDate()).startOf('day').toISOString();
-    query.created_before = moment(end || new Date()).endOf('day').toISOString();
+    query.updated_after = moment(start || moment().add(-30, 'day').toDate()).startOf('day').toISOString();
+    query.updated_before = moment(end || new Date()).endOf('day').toISOString();
     if (req.query.author_id) {
       query.author_id = req.query.author_id;
     }
