@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 import express from 'express';
 import cors from 'cors';
 import moment from 'moment';
@@ -7,14 +9,26 @@ import { Gitlab } from './gitlab'
 const app: express.Application = express();
 
 app.use(cors());
-
+console.log(process.env);
+const defaultProject = process.env.GITLAB_PROJECT;
 const gitLab = new Gitlab(
-  'https://gitlab.com/api/v4', 'REPLACE-TOKEN', '34950049',
+  'https://gitlab.com/api/v4', process.env.GITLAB_TOKEN, defaultProject,
 );
 
+app.get('/projects', async (req, res) => {
+  try {
+    gitLab.changeProject(req.query?.project?.toString() || defaultProject);
+    const projects = await gitLab.projects();
+    return res.send(projects);
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
 
 app.get('/project', async (req, res) => {
   try {
+    gitLab.changeProject(req.query?.project?.toString() || defaultProject);
     const project = await gitLab.project();
     return res.send(project);
   } catch (err) {
@@ -25,6 +39,7 @@ app.get('/project', async (req, res) => {
 
 app.get('/members', async (req, res) => {
   try {
+    gitLab.changeProject(req.query?.project?.toString() || defaultProject);
     const members = await gitLab.members();
     return res.send(members);
   } catch (err) {
@@ -35,6 +50,7 @@ app.get('/members', async (req, res) => {
 
 app.get('/issues', async (req, res) => {
   try {
+    gitLab.changeProject(req.query?.project?.toString() || defaultProject);
     const query: any = {
       pagination: 'keyset',
       per_page: req.query.per_page || 20,
@@ -67,6 +83,7 @@ app.get('/issues', async (req, res) => {
 
 app.get('/issues_statistics/:by?', async (req, res) => {
   try {
+    gitLab.changeProject(req.query?.project?.toString() || defaultProject);
     const { by } = req.params;
     const start: string = (req.query.start || '').toString();
     const end: string = (req.query.end || '').toString();
@@ -141,6 +158,7 @@ app.get('/issues_statistics/:by?', async (req, res) => {
 
 app.get('/milestones', async (req, res) => {
   try {
+    gitLab.changeProject(req.query?.project?.toString() || defaultProject);
     const milestones = await gitLab.milestones();
     return res.send(milestones);
   } catch (err) {
@@ -151,6 +169,7 @@ app.get('/milestones', async (req, res) => {
 
 app.get('/labels', async (req, res) => {
   try {
+    gitLab.changeProject(req.query?.project?.toString() || defaultProject);
     const labels = await gitLab.labels();
     return res.send(labels);
   } catch (err) {
